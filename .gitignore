@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-electron/
+release/
+release-portable/
+target/
+**/target/
+firmware/build/
+
+# Logs & OS files
+*.log
+.DS_Store
+Thumbs.db
+
+# Temporary / local files
+*.def
+.vscode/
+.idea/
