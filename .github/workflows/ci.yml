@@ -1,0 +1,81 @@
+name: CI / CD
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: Unit, SIL & HIL Tests
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: src-native
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-native
+
+      - name: Run unit, SIL, and HIL tests
+        run: cargo test --all-targets --verbose
+
+  build-and-release:
+    name: Build Windows Release (.exe)
+    needs: test
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: src-native
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-native
+
+      - name: Build release binary
+        run: cargo build --release
+
+      - name: Package release executable
+        shell: pwsh
+        run: |
+          $tag = if ($env:GITHUB_REF_TYPE -eq "tag") { $env:GITHUB_REF_NAME } else { "dev" }
+          $out = "SerialA-Monitor-$tag-win64.exe"
+          Copy-Item "target\release\seriala-native.exe" $out
+          "EXE_PATH=src-native/$out" >> $env:GITHUB_OUTPUT
+          "EXE_NAME=$out" >> $env:GITHUB_OUTPUT
+        id: pkg
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.pkg.outputs.EXE_NAME }}
+          path: ${{ steps.pkg.outputs.EXE_PATH }}
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.pkg.outputs.EXE_PATH }}
+          generate_release_notes: true
