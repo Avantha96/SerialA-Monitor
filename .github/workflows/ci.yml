@@ -20,7 +20,7 @@ jobs:
         working-directory: src-native
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -44,7 +44,7 @@ jobs:
         working-directory: src-native
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -68,7 +68,7 @@ jobs:
         id: pkg
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: ${{ steps.pkg.outputs.EXE_NAME }}
           path: ${{ steps.pkg.outputs.EXE_PATH }}
