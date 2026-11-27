@@ -1,10 +1,21 @@
 # SerialA Monitor
 
+[![CI / CD](https://github.com/Avantha96/SerialA-Monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/Avantha96/SerialA-Monitor/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/Avantha96/SerialA-Monitor)](https://github.com/Avantha96/SerialA-Monitor/releases/latest)
+![Rust](https://img.shields.io/badge/Rust-egui-orange)
+![Platform](https://img.shields.io/badge/platform-Windows-blue)
+
 Multi-session serial + Modbus RTU tool for firmware and field engineers.
 A single native Windows executable (Rust + egui): no browser engine, no runtime to install.
 
-The product lives in **`src-native/`**. The `electron/`, `src/` + `src-tauri/` and
-`release*/` folders are earlier prototypes (Electron, then Tauri) and are no longer built.
+![SerialA Monitor: Modbus RTU tab](docs/screenshots/modbus-rtu-tab.png)
+
+**At a glance**
+
+- **Download:** the self-contained `.exe` (about 6 MB) is on the [latest release](https://github.com/Avantha96/SerialA-Monitor/releases/latest).
+- **Built for real field work:** decoding RS-485 Modbus RTU traffic (for example from 3-phase energy meters) and capturing UART logs from embedded devices.
+- **Tested on every push:** GitHub Actions runs 23 automated tests (unit tests plus Modbus SIL/HIL simulation tests against a simulated RS-485 bus and an Acrel ADL400 energy meter), then builds the release binary.
+- **Code:** the product lives in [`src-native/`](src-native). Earlier Electron and Tauri prototypes are kept in [`legacy/`](legacy) and are no longer built.
 
 ## What you can use it for
 
